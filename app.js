@@ -82,4 +82,26 @@ app.get('/tweets', (req, res) =>
   res.send(tweet);
 });
 
+app.get('/tweets/:usern', (req, res) => 
+{
+	const user = req.params.usern;
+
+  if(!user)  
+  {
+    res.status(400).send("Todos os campos são obrigatórios");
+		return;
+  }
+
+	const tweetu = tweets.find(t => t.username === user);
+  
+  if(!tweetu)
+  {
+    res.status(404).send("Usuario nao possui tweets ou nao existe");
+		return;
+  }
+
+  res.send(tweetu);
+  res.sendStatus(201); 
+});
+
 app.listen(5000);
