@@ -11,16 +11,46 @@ const tweets = [];
 
 app.post('/sign-up', (req, res) => 
 {
-  const user = {id : users.length + 1,
+  if (!req.body.username || !req.body.avatar) 
+  {
+    res.status(400).send("Todos os campos são obrigatórios");
+		return;
+  }
+
+  const u = users.find(element => element.username === req.body.username);
+
+  if(!u)
+  {
+    const user = {id : users.length + 1,
                 username : req.body.username, 
                 avatar : req.body.avatar};
-  users.push(user);
+    users.push(user);   
+  }
+  else
+  {
+    users[u.id-1].avatar = req.body.avatar;
+    tweets.map(function(t)
+    {
+      if(t.username === req.body.username)
+      {
+        t.avatar = req.body.avatar;
+      }
+    })
+  }
+
   res.send("OK");
+  res.sendStatus(201);
 });
 
 app.post('/tweets', (req, res) => 
 {
   
+  if (!req.body.username || !req.body.tweet)  
+  {
+    res.status(400).send("Todos os campos são obrigatórios");
+		return;
+  }
+
   const user = users.find(element => element.username === req.body.username);
 
   const tweet = {id : tweets.length + 1,
@@ -29,6 +59,7 @@ app.post('/tweets', (req, res) =>
                 tweet : req.body.tweet}; 
   tweets.push(tweet);
   res.send("OK");
+  res.sendStatus(201);
 });
 
 app.get('/tweets', (req, res) => 
@@ -47,7 +78,7 @@ app.get('/tweets', (req, res) =>
   {
     tweet = tweets;
   }
-  console.log(tweet);
+  
   res.send(tweet);
 });
 
