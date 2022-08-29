@@ -11,7 +11,6 @@ const tweets = [];
 
 app.post('/sign-up', (req, res) => 
 {
-  console.log("logou");
   const user = {id : users.length + 1,
                 username : req.body.username, 
                 avatar : req.body.avatar};
@@ -24,8 +23,6 @@ app.post('/tweets', (req, res) =>
   
   const user = users.find(element => element.username === req.body.username);
 
-  console.log(user);
-
   const tweet = {id : tweets.length + 1,
                 username : user.username,
                 avatar : user.avatar, 
@@ -36,8 +33,22 @@ app.post('/tweets', (req, res) =>
 
 app.get('/tweets', (req, res) => 
 {
-
-  res.send(tweets);
+  let tweet = [];
+  let j = 0;
+  for (let i = tweets.length - 1; i >= 0 ; i--, j++) 
+  {
+    tweet.push(tweets[i]);
+    if(j >= 9)
+    {
+      break;
+    }
+  }
+  if(tweets.length === 0)
+  {
+    tweet = tweets;
+  }
+  console.log(tweet);
+  res.send(tweet);
 });
 
 app.listen(5000);
